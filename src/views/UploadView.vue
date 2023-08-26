@@ -116,8 +116,10 @@
           id="dropzoneFiles"
           ref="file"
           v-on:change="handleFileUpload()"
-          accept="video/*"
         />
+      </div>
+      <div class="content__progress">
+        <Progress progress="45" size="sm"></Progress>
       </div>
     </div>
   </div>
@@ -126,10 +128,22 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
+import { Progress } from "flowbite-vue";
 
 const network = ref("VK");
 const active = ref(false);
 let formData = new FormData();
+
+const uploadFile = async () => {
+  console.log("start");
+  res = await axios.post(`${path.value}/upload`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+    },
+  });
+};
 
 const handleFileUpload = async () => {
   file.value = instance.refs.file.files[0];
@@ -143,7 +157,7 @@ const toggleActive = () => {
 };
 </script>
 
-<style>
+<style scoped>
 .__container {
   margin: 0px auto;
   max-width: 1000px;
@@ -187,7 +201,7 @@ const toggleActive = () => {
   display: none;
 }
 .buttons__label {
-  color: #d6e0ea;
+  color: rgba(42, 38, 38, 0.6);
   font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
@@ -203,6 +217,7 @@ const toggleActive = () => {
 .content__buttons input:checked + span {
   border-radius: 4px;
   background: #4663ab;
+  transition: 0.3s ease all;
   color: #fff;
   padding: 12px 24px;
   justify-content: center;
